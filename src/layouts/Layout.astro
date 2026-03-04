@@ -1,0 +1,69 @@
+---
+// Loading CSS
+import '../styles/style.css';
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGINEERING, RESEARCH & REFLECTIONS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;600&display=swap');
+    </style>
+</head>
+<body>
+    <div class="custom-cursor" id="cursor"></div>
+
+    <svg class="noise-overlay" xmlns="http://www.w3.org/2000/svg">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+        </filter>
+        <rect width="100%" height="100%" filter="url(#noiseFilter)"/>
+    </svg>
+
+    <header class="global-header glass-effect">
+        <nav class="nav-container">
+            <div class="logo"><a href="/">一尺八寸の余白</a></div>
+            <ul class="nav-links">
+                <li><a href="/#diary">01 DIARY</a></li>
+                <li><a href="/#engineering">02 ENGINEERING</a></li>
+                <li><a href="/#publications">03 PUBLICATIONS</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <slot />
+
+    <script is:inline>
+        const cursor = document.getElementById('cursor');
+        const hoverTriggers = document.querySelectorAll('a, button, .hover-trigger');
+
+        document.addEventListener('mousemove', (e) => {
+            if(cursor) cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+        });
+
+        hoverTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => cursor?.classList.add('cursor-hover'));
+            trigger.addEventListener('mouseleave', () => cursor?.classList.remove('cursor-hover'));
+        });
+
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+            reveals.forEach(reveal => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        // 少し遅延させて初期表示を確実にする
+        setTimeout(revealOnScroll, 100);
+    </script>
+</body>
+</html>

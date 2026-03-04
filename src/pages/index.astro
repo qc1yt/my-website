@@ -1,17 +1,61 @@
 ---
+// Loading layout
+import Layout from '../layouts/Layout.astro';
+// Astroの機能を使って、diaryフォルダの中身を取得するための準備
+import { getCollection } from 'astro:content';
 
+// 日記コレクションをすべて取得し、日付の新しい順（降順）に並び替える
+const allDiaryEntries = await getCollection('diary');
+const sortedDiaryEntries = allDiaryEntries.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout>
+    <main>
+        <section class="hero reveal">
+            <h1 class="hero-title">
+                <span class="block-reveal delay-1">THERMODYNAMICS,</span><br>
+                <span class="block-reveal delay-2">ENGINEERING</span><br>
+                <span class="block-reveal delay-3">& REFLECTIONS.</span>
+            </h1>
+            <p class="hero-subtitle block-reveal delay-4">工学系の探求、学術研究の記録、そして日々の備忘録。</p>
+        </section>
+
+        <section id="diary" class="section reveal">
+            <h2 class="section-title">01 DIARY</h2>
+            <div class="diary-feed">
+                {sortedDiaryEntries.map(entry => (
+                    <article class="diary-entry">
+                        <div class="diary-meta">
+                            <time datetime={entry.data.date.toISOString()}>
+                                {entry.data.date.toISOString().slice(0, 10).replace(/-/g, '.')}
+                            </time>
+                            {entry.data.tags && entry.data.tags.length > 0 && (
+                                <span class="tag">{entry.data.tags[0]}</span>
+                            )}
+                        </div>
+                        <div class="diary-summary">
+                            <a href={`/diary/${entry.slug}`} class="diary-title-link">
+                                {entry.data.title}
+                            </a>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </section>
+
+        <section id="engineering" class="section reveal">
+            <h2 class="section-title">02 ENGINEERING</h2>
+            <div class="bento-grid">
+                <article class="card card-large glass-effect hover-trigger">
+                    <div class="card-content">
+                        <h3 class="card-title">PythonとCuPyを用いた<br>2D FFTデータ解析の高速化</h3>
+                        <p class="card-description">NumPyおよびOpenCVを組み合わせた画像・データ処理パイプラインの構築。GPUを活用した演算の最適化アプローチについて。</p>
+                        <p class="card-meta"><span class="badge">Python</span> 8 min read</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</Layout>

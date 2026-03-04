@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+// 全ての日記データを取得して、それぞれのURL（パス）を生成する関数
+export async function getStaticPaths() {
+  const diaryEntries = await getCollection('diary');
+  return diaryEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+// URLに合致するMarkdownデータを取得
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<Layout>
+    <main>
+        <section class="article-content section">
+            <div class="article-header" style="margin-top: 5rem; margin-bottom: 3rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 2rem;">
+                <time style="color: var(--text-tertiary); font-size: 0.9rem;">
+                    {entry.data.date.toISOString().slice(0, 10).replace(/-/g, '.')}
+                </time>
+                <h1 style="font-size: 2rem; margin-top: 1rem; font-weight: 300;">
+                    {entry.data.title}
+                </h1>
+                <div style="margin-top: 1.5rem;">
+                    {entry.data.tags && entry.data.tags.map(tag => (
+                        <span class="tag" style="margin-right: 1rem;">{tag}</span>
+                    ))}
+                </div>
+            </div>
+            
+            <div class="article-body diary-text" style="line-height: 2;">
+                <Content />
+                
+                <br>
+                <a href="/#diary" style="font-size: 0.9rem; color: var(--accent); margin-top: 4rem; display: inline-block;">
+                    ← トップページへ戻る
+                </a>
+            </div>
+        </section>
+    </main>
+</Layout>
