@@ -1,12 +1,20 @@
 ---
-// Loading CSS
 import '../styles/style.css';
+import { getCollection } from 'astro:content';
+import { ViewTransitions } from 'astro:transitions';
+
+// 全セクションのデータを取得して最新順に並べる（エラー時は空配列）
+const allDiary = await getCollection('diary').then(entries => entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())).catch(() => []);
+const allTech = await getCollection('tech').then(entries => entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())).catch(() => []);
+const allSoftware = await getCollection('software').then(entries => entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())).catch(() => []);
+const allPapers = await getCollection('papers').then(entries => entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())).catch(() => []);
 ---
 
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <ViewTransitions />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ENGINEERING, RESEARCH & REFLECTIONS</title>
     <style>
@@ -28,42 +36,85 @@ import '../styles/style.css';
             <div class="logo"><a href="/">一尺八寸の余白</a></div>
             <ul class="nav-links">
                 <li><a href="/#diary">01 DIARY</a></li>
-                <li><a href="/#engineering">02 ENGINEERING</a></li>
-                <li><a href="/#publications">03 PUBLICATIONS</a></li>
+                <li><a href="/#tech">02 TECH</a></li>
+                <li><a href="/#software">03 SOFTWARE</a></li>
+                <li><a href="/#papers">04 PAPERS</a></li>
             </ul>
         </nav>
     </header>
 
-    <slot />
+    <div class="layout-wrapper">
+        <aside class="sidebar">
+            <h3 class="sidebar-title">CONTENTS</h3>
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="/#diary" style="color: var(--text-secondary);">01 DIARY</a>
+                    {allDiary.length > 0 && (
+                        <ul class="sub-nav">
+                            {allDiary.map(entry => (
+                                <li><a href={`/diary/${entry.slug}`}>{entry.data.title}</a></li>
+                            ))}
+                        </ul>
+                    )}
+                </li>
 
-    <script is:inline>
-        const cursor = document.getElementById('cursor');
-        const hoverTriggers = document.querySelectorAll('a, button, .hover-trigger');
+                <li>
+                    <a href="/#tech" style="color: var(--text-secondary);">02 TECH NOTES</a>
+                    {allTech.length > 0 && (
+                        <ul class="sub-nav">
+                            {allTech.map(entry => (
+                                <li><a href={`/tech/${entry.slug}`}>{entry.data.title}</a></li>
+                            ))}
+                        </ul>
+                    )}
+                </li>
 
-        document.addEventListener('mousemove', (e) => {
-            if(cursor) cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+                <li>
+                    <a href="/#software" style="color: var(--text-secondary);">03 SOFTWARE</a>
+                    {allSoftware.length > 0 && (
+                        <ul class="sub-nav">
+                            {allSoftware.map(entry => (
+                                <li><a href={`/software/${entry.slug}`}>{entry.data.title}</a></li>
+                            ))}
+                        </ul>
+                    )}
+                </li>
+
+                <li>
+                    <a href="/#papers" style="color: var(--text-secondary);">04 PAPERS</a>
+                    {allPapers.length > 0 && (
+                        <ul class="sub-nav">
+                            {allPapers.map(entry => (
+                                <li><a href={`/papers/${entry.slug}`}>{entry.data.title}</a></li>
+                            ))}
+                        </ul>
+                    )}
+                </li>
+            </ul>
+        </aside>
+        
+        <div class="main-content">
+            <slot />
+        </div>
+    </div>
+
+<script is:inline>
+        document.addEventListener('astro:page-load', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const revealOnScroll = () => {
+                const windowHeight = window.innerHeight;
+                const elementVisible = 100;
+                reveals.forEach(reveal => {
+                    const elementTop = reveal.getBoundingClientRect().top;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveal.classList.add('active');
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', revealOnScroll);
+            setTimeout(revealOnScroll, 100); // 初期表示
         });
-
-        hoverTriggers.forEach(trigger => {
-            trigger.addEventListener('mouseenter', () => cursor?.classList.add('cursor-hover'));
-            trigger.addEventListener('mouseleave', () => cursor?.classList.remove('cursor-hover'));
-        });
-
-        const reveals = document.querySelectorAll('.reveal');
-        const revealOnScroll = () => {
-            const windowHeight = window.innerHeight;
-            const elementVisible = 100;
-            reveals.forEach(reveal => {
-                const elementTop = reveal.getBoundingClientRect().top;
-                if (elementTop < windowHeight - elementVisible) {
-                    reveal.classList.add('active');
-                }
-            });
-        };
-
-        window.addEventListener('scroll', revealOnScroll);
-        // 少し遅延させて初期表示を確実にする
-        setTimeout(revealOnScroll, 100);
     </script>
 </body>
 </html>

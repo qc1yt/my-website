@@ -1,14 +1,22 @@
 ---
-// Loading layout
 import Layout from '../layouts/Layout.astro';
-// Astroの機能を使って、diaryフォルダの中身を取得するための準備
 import { getCollection } from 'astro:content';
 
-// 日記コレクションをすべて取得し、日付の新しい順（降順）に並び替える
-const allDiaryEntries = await getCollection('diary');
-const sortedDiaryEntries = allDiaryEntries.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+// 1. DIARYの取得とソート
+const diaryEntries = await getCollection('diary').catch(() => []);
+const sortedDiaryEntries = diaryEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// 2. TECH NOTESの取得とソート
+const techEntries = await getCollection('tech').catch(() => []);
+const sortedTech = techEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// 3. SOFTWARE & TOOLSの取得とソート
+const softwareEntries = await getCollection('software').catch(() => []);
+const sortedSoftware = softwareEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// 4. PAPER REVIEWSの取得とソート
+const papersEntries = await getCollection('papers').catch(() => []);
+const sortedPapers = papersEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 
 <Layout>
@@ -45,16 +53,56 @@ const sortedDiaryEntries = allDiaryEntries.sort(
             </div>
         </section>
 
-        <section id="engineering" class="section reveal">
-            <h2 class="section-title">02 ENGINEERING</h2>
+        <section id="tech" class="section reveal">
+            <h2 class="section-title">02 TECH NOTES</h2>
             <div class="bento-grid">
-                <article class="card card-large glass-effect hover-trigger">
-                    <div class="card-content">
-                        <h3 class="card-title">PythonとCuPyを用いた<br>2D FFTデータ解析の高速化</h3>
-                        <p class="card-description">NumPyおよびOpenCVを組み合わせた画像・データ処理パイプラインの構築。GPUを活用した演算の最適化アプローチについて。</p>
-                        <p class="card-meta"><span class="badge">Python</span> 8 min read</p>
-                    </div>
-                </article>
+                {sortedTech.map((entry, index) => (
+                    <a href={`/tech/${entry.slug}`} class={`card ${index === 0 ? 'card-large' : ''} glass-effect hover-trigger`}>
+                        <div class="card-content">
+                            <h3 class="card-title">{entry.data.title}</h3>
+                            <p class="card-description">{entry.data.description}</p>
+                            <p class="card-meta">
+                                {entry.data.tags && entry.data.tags[0] && <span class="badge">{entry.data.tags[0]}</span>}
+                                {entry.data.date.toISOString().slice(0, 10).replace(/-/g, '.')}
+                            </p>
+                        </div>
+                    </a>
+                ))}
+            </div>
+        </section>
+
+        <section id="software" class="section reveal">
+            <h2 class="section-title">03 SOFTWARE & TOOLS</h2>
+            <div class="bento-grid">
+                {sortedSoftware.map((entry, index) => (
+                    <a href={`/software/${entry.slug}`} class={`card ${index === 0 ? 'card-large' : ''} glass-effect hover-trigger`}>
+                        <div class="card-content">
+                            <h3 class="card-title">{entry.data.title}</h3>
+                            <p class="card-description">{entry.data.description}</p>
+                            <p class="card-meta">
+                                {entry.data.tags && entry.data.tags[0] && <span class="badge">{entry.data.tags[0]}</span>}
+                            </p>
+                        </div>
+                    </a>
+                ))}
+            </div>
+        </section>
+
+        <section id="papers" class="section reveal">
+            <h2 class="section-title">04 PAPER REVIEWS</h2>
+            <div class="bento-grid">
+                {sortedPapers.map((entry, index) => (
+                    <a href={`/papers/${entry.slug}`} class={`card ${index === 0 ? 'card-large' : ''} glass-effect hover-trigger`}>
+                        <div class="card-content">
+                            <h3 class="card-title">{entry.data.title}</h3>
+                            <p class="card-description">{entry.data.description}</p>
+                            <p class="card-meta">
+                                {entry.data.tags && entry.data.tags[0] && <span class="badge">{entry.data.tags[0]}</span>}
+                                {entry.data.date.toISOString().slice(0, 10).replace(/-/g, '.')}
+                            </p>
+                        </div>
+                    </a>
+                ))}
             </div>
         </section>
     </main>
