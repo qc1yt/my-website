@@ -16,6 +16,8 @@ const allPapers = await getCollection('papers').then(entries => entries.sort((a,
     <meta charset="UTF-8">
     <ViewTransitions />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is a personal knowledge base compiling my daily notes.">
+    <meta name="google-site-verification" content="googlef9f335d673059550"/>
     <title>ENGINEERING, RESEARCH & REFLECTIONS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;600&display=swap');
@@ -45,7 +47,9 @@ const allPapers = await getCollection('papers').then(entries => entries.sort((a,
 
     <div class="layout-wrapper">
         <aside class="sidebar">
-            <h3 class="sidebar-title">CONTENTS</h3>
+            <a href="/archive" class="contents-button hover-trigger">
+                INDEX / CONTENTS <span class="arrow">→</span>
+            </a>
             <ul class="sidebar-nav">
                 <li>
                     <a href="/#diary" style="color: var(--text-secondary);">01 DIARY</a>

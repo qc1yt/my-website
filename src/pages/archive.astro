@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allDiary = await getCollection('diary');
+const allTech = await getCollection('tech');
+const allSoftware = await getCollection('software');
+const allPapers = await getCollection('papers');
+
+const formatEntries = (entries: any[], type: string, label: string) => {
+    return entries.map((entry: any) => ({ ...entry, type, label }));
+};
+
+const combinedEntries = [
+    ...formatEntries(allDiary, 'diary', 'Diary'),
+    ...formatEntries(allTech, 'tech', 'Tech Notes'),
+    ...formatEntries(allSoftware, 'software', 'Software'),
+    ...formatEntries(allPapers, 'papers', 'Papers')
+];
+
+const sortedAllEntries = combinedEntries.sort(
+    (a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<Layout>
+    <main>
+        <section class="section reveal" style="margin-top: 5rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 300; margin-bottom: 4rem; letter-spacing: 0.05em;">
+                Index
+            </h1>
+            
+            <div class="archive-list">
+                {/* mapの引数（entry）に型（: any）を追加 */}
+                {sortedAllEntries.map((entry: any) => (
+                    <a href={`/${entry.type}/${entry.slug}`} class="archive-item hover-trigger">
+                        <span class="archive-date">
+                            {entry.data.date.toISOString().slice(0, 4)}
+                        </span>
+                        <span class="archive-title">{entry.data.title}</span>
+                        <span class="archive-category tag">{entry.label}</span>
+                    </a>
+                ))}
+            </div>
+        </section>
+    </main>
+</Layout>
