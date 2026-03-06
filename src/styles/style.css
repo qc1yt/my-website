@@ -6,7 +6,7 @@
     --bg-surface-hover: rgba(255, 255, 255, 0.05);
     --border-glass: rgba(255, 255, 255, 0.06);
     
-    --text-primary: #f0f0f0;
+    --text-primary: #cccccc;
     --text-secondary: #999999;
     --text-tertiary: #555555;
     --accent: #e5b522;
@@ -252,8 +252,8 @@ main {
 .tag::before { content: "— "; color: var(--accent); }
 
 .diary-text { 
-    color: var(--text-secondary); 
-    font-size: 1rem;
+    color: var(--text-primary); /* 本文白 */
+    font-size: 1.1rem;
     line-height: 2;
 }
 
