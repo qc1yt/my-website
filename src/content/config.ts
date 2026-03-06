@@ -1,3 +1,5 @@
+// contentのデータ構造(タグ・日付の型等)を定義するファイル
+
 import { z, defineCollection } from 'astro:content';
 
 // 全セクション共通のスキーマ（ルール）

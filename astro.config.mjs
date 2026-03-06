@@ -1,3 +1,4 @@
+// Settings for the entire Astro project.
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
