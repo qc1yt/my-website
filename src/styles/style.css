@@ -537,3 +537,53 @@ a.card {
 .contents-button:hover .arrow {
     transform: translateX(4px); /* 矢印が右に動く */
 }
+
+/* --- Article / Markdown Content --- */
+/* 文章の折り返し設定 */
+.article-body p,
+.article-body li {
+    overflow-wrap: break-word; /* 長いURLや英単語が枠をはみ出さないように折り返す */
+    word-break: break-word;
+    margin-bottom: 1.5rem;
+}
+
+/* 画像のレスポンシブ対応（はみ出し防止） */
+.article-body img {
+    max-width: 100%;       /* 親要素の幅を超えないようにする */
+    height: auto;          /* 縦横比を維持する */
+    border-radius: 8px;    /* サイトのデザインに合わせて少し角丸に */
+    margin: 2rem auto;     /* 上下に余白を持たせる */
+    display: block;
+    border: 1px solid var(--border-glass); /* サイトの雰囲気に合わせた薄い枠線 */
+}
+
+/* 見出し（h2）の装飾 */
+.article-body h2 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-top: 3.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 0.5rem;
+}
+
+/* リストの装飾 */
+.article-body ul {
+    margin-left: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.article-body li {
+    margin-bottom: 0.5rem;
+}
+
+/* 引用（blockquote）の装飾 */
+.article-body blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
