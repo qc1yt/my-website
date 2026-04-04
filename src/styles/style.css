@@ -11,8 +11,8 @@
     --text-tertiary: #555555;
     --accent: #e5b522;
 
-    --font-heading: 'Inter', 'Noto Sans JP', sans-serif;
-    --font-body: 'Inter', 'Noto Sans JP', sans-serif;
+    --font-heading: 'Latin Modern Roman', 'Noto Sans JP', serif;
+    --font-body: 'Inter', 'Noto Sans JP', serif;
 }
 
 * {
