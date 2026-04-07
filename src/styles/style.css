@@ -11,8 +11,8 @@
     --text-tertiary: #555555;
     --accent: #e5b522;
 
-    --font-heading: 'Inter', 'Noto Sans JP', sans-serif;
-    --font-body: 'Inter', 'Noto Sans JP', sans-serif;
+    --font-heading: 'Latin Modern Roman', 'Noto Sans JP', serif;
+    --font-body: 'Inter', 'Noto Sans JP', serif;
 }
 
 * {
@@ -257,17 +257,6 @@ main {
     line-height: 2;
 }
 
-/* style.css に追記 */
-.diary-title-link {
-    font-size: 1.1rem;
-    font-weight: 400;
-    color: var(--text-primary);
-    display: inline-block;
-}
-.diary-title-link:hover {
-    color: var(--accent);
-}
-
 /* === 02 ENGINEERING (Bento Grid) === */
 .bento-grid {
     display: grid;
@@ -392,9 +381,6 @@ main {
 
 /* Responsive */
 @media (max-width: 768px) {
-   * { cursor: auto; } /* モバイルではカスタムカーソル無効化 */
-   .custom-cursor { display: none; }
-   
    .nav-links { display: none; }
    .hero { padding: 8rem 0 6rem; }
    .hero-title { font-size: 3rem; }
@@ -430,17 +416,17 @@ main {
     padding-left: 1rem;
 }
 
-.sub-nav a {
-    font-size: 0.75rem !important; /* 親セクションより少し小さく */
-    color: var(--text-tertiary) !important; /* 少し暗くしてメリハリを */
+.sidebar-nav .sub-nav a {
+    font-size: 0.75rem; /* 親セクションより少し小さく */
+    color: var(--text-tertiary); /* 少し暗くしてメリハリを */
     line-height: 1.5;
     display: block;
     font-family: var(--font-body);
     letter-spacing: 0.05em;
 }
 
-.sub-nav a:hover {
-    color: var(--text-primary) !important;
+.sidebar-nav .sub-nav a:hover {
+    color: var(--text-primary);
     transform: translateX(4px);
 }
 

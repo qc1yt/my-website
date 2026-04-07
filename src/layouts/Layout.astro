@@ -3,7 +3,7 @@
 
 import '../styles/style.css';
 import { getCollection } from 'astro:content';
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 
 // 全セクションのデータを取得して最新順に並べる（エラー時は空配列）
 const allDiary = await getCollection('diary').then(entries => entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())).catch(() => []);
@@ -16,17 +16,16 @@ const allPapers = await getCollection('papers').then(entries => entries.sort((a,
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <ViewTransitions />
+    <ClientRouter />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="This is a personal knowledge base compiling my daily notes.">
     <title>ENGINEERING, RESEARCH & REFLECTIONS</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;600&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/latin-modern-roman');
     </style>
 </head>
 <body>
-    <div class="custom-cursor" id="cursor"></div>
-
     <svg class="noise-overlay" xmlns="http://www.w3.org/2000/svg">
         <filter id="noiseFilter">
             <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
@@ -119,6 +118,11 @@ const allPapers = await getCollection('papers').then(entries => entries.sort((a,
 
             window.addEventListener('scroll', revealOnScroll);
             setTimeout(revealOnScroll, 100); // 初期表示
+
+            // ページ遷移前にリスナーを解除してメモリリークを防ぐ
+            document.addEventListener('astro:before-swap', () => {
+                window.removeEventListener('scroll', revealOnScroll);
+            }, { once: true });
         });
     </script>
 </body>

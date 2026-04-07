@@ -4,10 +4,10 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-const allDiary = await getCollection('diary');
-const allTech = await getCollection('tech');
-const allSoftware = await getCollection('software');
-const allPapers = await getCollection('papers');
+const allDiary = await getCollection('diary').catch(() => []);
+const allTech = await getCollection('tech').catch(() => []);
+const allSoftware = await getCollection('software').catch(() => []);
+const allPapers = await getCollection('papers').catch(() => []);
 
 const formatEntries = (entries: any[], type: string, label: string) => {
     return entries.map((entry: any) => ({ ...entry, type, label }));
